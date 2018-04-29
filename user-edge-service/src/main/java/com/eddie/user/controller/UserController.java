@@ -20,6 +20,7 @@ public class UserController {
     private StringRedisTemplate template;
 
     @PostMapping(value = "/login")
+    @ResponseBody
     public Response login(@RequestParam("userName")String userName, @RequestParam("password")String password){
         UserInfo user = null;
         try {
@@ -39,7 +40,7 @@ public class UserController {
 
         String token = CommonUtil.genToken(userName);
 
-        return null;
+        return new Response("1000",token);
     }
 
     @GetMapping(value = "/test")
