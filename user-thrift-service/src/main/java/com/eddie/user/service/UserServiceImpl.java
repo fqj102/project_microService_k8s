@@ -4,13 +4,14 @@ import com.eddie.micro.user.UserInfo;
 import com.eddie.micro.user.UserService;
 import com.eddie.user.mapper.UserMapper;
 import org.apache.thrift.TException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService.Iface {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     @Override
