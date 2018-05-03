@@ -30,11 +30,7 @@ public class UserController {
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
-        if (user == null){
-            return Response.USERNAME_PASSWORD_INVALID;
-        }
-
-        if (!user.getPassWord().equalsIgnoreCase(CommonUtil.MD5(password))){
+        if (user == null || !user.getPassWord().equalsIgnoreCase(CommonUtil.MD5(password))){
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
