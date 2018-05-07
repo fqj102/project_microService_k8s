@@ -1,11 +1,12 @@
 package com.eddie.user.controller;
 
-import com.common.Pool.RedisClient;
-import com.common.Pool.RedisFactory;
+import com.alibaba.fastjson.JSONObject;
 import com.eddie.micro.user.UserInfo;
+import com.eddie.user.entity.PostMessage;
+import com.eddie.user.entity.User;
 import com.eddie.user.response.Response;
 import com.eddie.user.thrift.ServiceProvide;
-import com.eddie.user.util.CommonUtil;
+import com.eddie.util.SignUtil;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -23,26 +24,35 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ResponseBody
-    public Response login(@RequestParam("userName")String userName, @RequestParam("password")String password){
+    public Response login(@RequestParam("userName")PostMessage message){
         UserInfo user = null;
+        User userInfo = getJsonUserLoginInfo(message.getParams());
         try {
-            user = serviceProvide.getUserService().getUserByUserName(userName);
+            user = serviceProvide.getUserService().getUserByUserName(userInfo.getUserName());
         } catch (TException e) {
             e.printStackTrace();
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
-        if (user == null || !user.getPassWord().equalsIgnoreCase(CommonUtil.MD5(password))){
+        if (user == null || !user.getPassWord().equalsIgnoreCase(SignUtil.PasswordMD5(userInfo.getPassWord()))){
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
-        String token = CommonUtil.genToken(userName);
-
-        RedisClient local = RedisFactory.build("localhost", 6399);
-
-        local.putData("123","tf");
+        String token = SignUtil.genToken(userInfo.getUserName(),"localhost");
 
         return new Response("1000",token);
+    }
+
+    private User getJsonUserLoginInfo(String params) {
+        if (params == null || params.equals("")){
+            return null;
+        }
+        JSONObject object = JSONObject.parseObject(params);
+        String userName = object.getString("userName");
+        String password = object.getString("password");
+
+        User user = new User(userName,password);
+        return user;
     }
 
     @GetMapping(value = "/test")
@@ -59,7 +69,6 @@ public class UserController {
     @GetMapping(value = "/get")
     @ResponseBody
     public String getValue(){
-
         if(!template.hasKey("shabao")){
             return "key不存在，请先保存数据";
         }else{
