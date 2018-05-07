@@ -1,5 +1,7 @@
 package com.eddie.user.controller;
 
+import com.common.Pool.RedisClient;
+import com.common.Pool.RedisFactory;
 import com.eddie.micro.user.UserInfo;
 import com.eddie.user.response.Response;
 import com.eddie.user.thrift.ServiceProvide;
@@ -36,6 +38,10 @@ public class UserController {
 
         String token = CommonUtil.genToken(userName);
 
+        RedisClient local = RedisFactory.build("localhost", 6399);
+
+        local.putData("123","tf");
+
         return new Response("1000",token);
     }
 
@@ -46,10 +52,10 @@ public class UserController {
             template.opsForValue().append("shabao", "我是傻宝");
             return "使用redis缓存保存数据成功";
         }else{
-            template.delete("shabao");
             return "key已存在";
         }
     }
+
     @GetMapping(value = "/get")
     @ResponseBody
     public String getValue(){
