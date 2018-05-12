@@ -15,11 +15,16 @@ authCode = 'aA111111'
 
 class MessageServiceHandler:
 
-    def sendMobileMessage(self, Mobile, message):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def sendMobileMessage(Mobile, message):
         print('send mobile message')
         return True
 
-    def sendEmailMessage(self, email, message):
+    @staticmethod
+    def sendEmailMessage(email, message):
         print('send Email message')
         messageObj = MIMEText(message, "plain", "utf-8")
         messageObj['From'] = sander
@@ -41,9 +46,9 @@ if __name__ == "__main__":
     handler = MessageServiceHandler()
     processor = MessageService.Processor(handler)
     transport = TSocket.TServerSocket("localhost", "9090")
-    tfactory = TTransport.TFramedTransportFactory()
-    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
-    server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
+    tFactory = TTransport.TFramedTransportFactory()
+    pFactory = TBinaryProtocol.TBinaryProtocolFactory()
+    server = TServer.TSimpleServer(processor, transport, tFactory, pFactory)
     print("py start")
     server.serve()
     print("py exit")

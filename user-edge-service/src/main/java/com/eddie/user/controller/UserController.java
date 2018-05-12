@@ -43,6 +43,15 @@ public class UserController {
         return new Response("1000",token);
     }
 
+    @PostMapping(value = "/register")
+    @ResponseBody
+    public Response registerUser(){
+
+        //serviceProvide.getUserService().registerUser();
+
+        return Response.USERNAME_PASSWORD_INVALID;
+    }
+
     private User getJsonUserLoginInfo(String params) {
         if (params == null || params.equals("")){
             return null;
@@ -73,6 +82,7 @@ public class UserController {
             return "key不存在，请先保存数据";
         }else{
             String shabao = template.opsForValue().get("shabao");//根据key获取缓存中的val
+            template.delete("shabao");
             return "获取到缓存中的数据：shabao="+shabao;
         }
     }
