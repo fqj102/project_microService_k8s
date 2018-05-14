@@ -20,7 +20,7 @@ public class User {
         this.realName = realName;
     }
 
-    public User(int id, String userName, String passWord, String realName, String mobile, String email) {
+    public User(String userName, String passWord, String realName, String mobile, String email) {
         this.id = id;
         this.userName = userName;
         this.passWord = passWord;

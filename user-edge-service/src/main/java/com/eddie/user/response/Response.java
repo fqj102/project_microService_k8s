@@ -13,7 +13,9 @@ public class Response implements Serializable {
         this.message = message;
     }
 
-    public static final Response USERNAME_PASSWORD_INVALID = new Response("1001","username or password not error");
+    public static final Response USERNAME_PASSWORD_INVALID = new Response("1001","username or password invalid");
+
+    public static final Response MOBILE_OR_PHONE_REQUIRED = new Response("1001","mobile or phone are required");
 
     public String getCode() {
         return code;
