@@ -22,7 +22,6 @@ public class ThriftService {
     @Autowired
     private UserService.Iface userService;
 
-
     @PostConstruct
     public void startThriftService(){
         TProcessor processor = new UserService.Processor<>(userService);

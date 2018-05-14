@@ -1,73 +1,59 @@
 package com.eddie.user.redis;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.listener.PatternTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
-import java.util.concurrent.CountDownLatch;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
- * redis配置
- * @author pangjianhui
- *
+ * Redis缓存配置类
  */
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
-    @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
-                                            MessageListenerAdapter listenerAdapter) {
-
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, new PatternTopic("chat"));
-
-        return container;
-    }
+    @Value("${spring.redis.host}")
+    private String host;
+    @Value("${spring.redis.port}")
+    private int port;
 
     @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+    public JedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName(host);
+        configuration.setPort(port);
+        JedisConnectionFactory factory = new JedisConnectionFactory(configuration);
+        return factory;
     }
 
     @Bean
-    Receiver receiver(CountDownLatch latch) {
-        return new Receiver(latch);
+    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory){
+        StringRedisTemplate template = new StringRedisTemplate(factory);
+        setSerializer(template);//设置序列化工具
+        template.afterPropertiesSet();
+        return template;
     }
 
-    @Bean
-    CountDownLatch latch() {
-        return new CountDownLatch(1);
+    private void setSerializer(StringRedisTemplate template){
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setValueSerializer(jackson2JsonRedisSerializer);
     }
-
-    @Bean
-    StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
-        return new StringRedisTemplate(connectionFactory);
-    }
-
-    public class Receiver {
-
-
-        private CountDownLatch latch;
-
-        @Autowired
-        public Receiver(CountDownLatch latch) {
-            this.latch = latch;
-        }
-
-        public void receiveMessage(String message) {
-            latch.countDown();
-        }
-    }
-
-
 }
