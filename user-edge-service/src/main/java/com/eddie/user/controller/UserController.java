@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.eddie.micro.user.UserInfo;
 import com.eddie.user.entity.PostMessage;
 import com.eddie.user.entity.User;
+import com.eddie.user.redis.RedisClient;
 import com.eddie.user.response.Response;
 import com.eddie.user.thrift.ServiceProvide;
 import com.eddie.util.SignUtil;
 import org.apache.thrift.TException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +21,12 @@ public class UserController {
     private ServiceProvide serviceProvide;
 
     @Autowired
-    private StringRedisTemplate template;
+    private RedisClient redisClient;
 
     @PostMapping(value = "/login")
     @ResponseBody
-    public Response login(@RequestParam("userName")PostMessage message){
-        UserInfo user = null;
+    public Response login(PostMessage message){
+        UserInfo user;
         User userInfo = getJsonUserLoginInfo(message.getParams());
         try {
             user = serviceProvide.getUserService().getUserByUserName(userInfo.getUserName());
@@ -39,6 +40,9 @@ public class UserController {
         }
 
         String token = SignUtil.genToken(userInfo.getUserName(),"localhost");
+        BeanUtils.copyProperties(userInfo,user);
+
+        redisClient.set(token,userInfo,3600);
 
         return new Response("1000",token);
     }
@@ -64,26 +68,4 @@ public class UserController {
         return user;
     }
 
-    @GetMapping(value = "/test")
-    @ResponseBody
-    public String test(){
-        if(!template.hasKey("shabao")){
-            template.opsForValue().append("shabao", "我是傻宝");
-            return "使用redis缓存保存数据成功";
-        }else{
-            return "key已存在";
-        }
-    }
-
-    @GetMapping(value = "/get")
-    @ResponseBody
-    public String getValue(){
-        if(!template.hasKey("shabao")){
-            return "key不存在，请先保存数据";
-        }else{
-            String shabao = template.opsForValue().get("shabao");//根据key获取缓存中的val
-            template.delete("shabao");
-            return "获取到缓存中的数据：shabao="+shabao;
-        }
-    }
 }
