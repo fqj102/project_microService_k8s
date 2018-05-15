@@ -15,6 +15,7 @@
         <module>user-thrift-service</module>
         <module>user-edge-service</module>
         <module>micro-service-util</module>
+        <module>user-edge-service-client</module>
     </modules>
 
 </project>

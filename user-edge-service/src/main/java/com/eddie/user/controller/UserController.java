@@ -3,11 +3,11 @@ package com.eddie.user.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.eddie.micro.user.UserInfo;
 import com.eddie.user.entity.PostMessage;
-import com.eddie.user.entity.User;
+import com.eddie.micro.user.DTO.User;
 import com.eddie.user.redis.RedisClient;
 import com.eddie.user.response.Response;
 import com.eddie.user.thrift.ServiceProvide;
-import com.eddie.util.SignUtil;
+import com.eddie.util.SecretUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TException;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +31,9 @@ public class UserController {
     public Response login(PostMessage message){
         UserInfo user;
         User userInfo = getJsonUserLoginInfo(message.getParams());
+        if (userInfo == null){
+            return Response.POST_DATA_LOST;
+        }
         try {
             user = serviceProvide.getUserService().getUserByUserName(userInfo.getUserName());
         } catch (TException e) {
@@ -43,7 +46,7 @@ public class UserController {
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
-        String token = SignUtil.genToken(userInfo.getUserName(),"localhost");
+        String token = SecretUtil.genToken(userInfo.getUserName(),"localhost");
         BeanUtils.copyProperties(userInfo,user);
 
         redisClient.set(token,userInfo,3600);
@@ -83,7 +86,10 @@ public class UserController {
     public Response registerUser(PostMessage message){
         User user = getJsonUserLoginInfo(message.getParams());
         UserInfo userInfo = new UserInfo();
-        if (StringUtils.isBlank(user.getEmail())&&StringUtils.isBlank(user.getMobile())){
+        if (user == null){
+            return Response.POST_DATA_LOST;
+        }
+        if (StringUtils.isBlank(user.getEmail()) && StringUtils.isBlank(user.getMobile())){
             return Response.MOBILE_OR_PHONE_REQUIRED;
         }
         if (StringUtils.isNotBlank(user.getMobile())){
@@ -118,7 +124,7 @@ public class UserController {
         String realName = object.getString("realName");
         String mobile = object.getString("mobile");
         String email = object.getString("email");
-        User user = new User(userName,SignUtil.PasswordMD5(password),realName,mobile,email);
+        User user = new User(userName,SecretUtil.PasswordMD5(password),realName,mobile,email);
         return user;
     }
 

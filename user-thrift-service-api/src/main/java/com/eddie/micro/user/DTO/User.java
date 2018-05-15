@@ -1,4 +1,4 @@
-package com.eddie.user.entity;
+package com.eddie.micro.user.DTO;
 
 public class User {
     public int id; // required

@@ -26,6 +26,8 @@ public class Response implements Serializable {
 
     public static final Response VERIFY_CODE_INVALID = new Response("1004","verify code invalid");
 
+    public static final Response POST_DATA_LOST = new Response("1005","post data lost");
+
     public static final Response SUCCESS = new Response();
 
     public static final Response exception(Exception e){
