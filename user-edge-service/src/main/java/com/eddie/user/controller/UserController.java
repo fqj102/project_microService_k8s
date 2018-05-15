@@ -38,7 +38,8 @@ public class UserController {
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
-        if (user == null || !user.getPassWord().equalsIgnoreCase(SignUtil.PasswordMD5(userInfo.getPassWord()))){
+        if (user == null || !user.getPassWord().equalsIgnoreCase(userInfo.getPassWord())){
+            System.out.println(user.getPassWord()+"     |     "+userInfo.getPassWord());
             return Response.USERNAME_PASSWORD_INVALID;
         }
 
@@ -117,7 +118,7 @@ public class UserController {
         String realName = object.getString("realName");
         String mobile = object.getString("mobile");
         String email = object.getString("email");
-        User user = new User(userName,password,realName,mobile,email);
+        User user = new User(userName,SignUtil.PasswordMD5(password),realName,mobile,email);
         return user;
     }
 
