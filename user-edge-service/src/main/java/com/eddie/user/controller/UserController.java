@@ -68,8 +68,6 @@ public class UserController {
         return new Response("1000","success");
     }
 
-    
-
     private User getJsonUserLoginInfo(String params) {
         if (params == null || params.equals("")){
             return null;
