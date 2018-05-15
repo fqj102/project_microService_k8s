@@ -52,8 +52,8 @@ public class UserController {
 
     @PostMapping("/sendVerifyCode")
     @ResponseBody
-    public Response sendVerifyCode(@RequestParam("mobile") String mobile ,
-                                   @RequestParam("email") String email){
+    public Response sendVerifyCode(@RequestParam(value = "mobile" ,required=false) String mobile ,
+                                   @RequestParam(value = "email", required = false) String email){
         String message = "Verify Code is:";
         String code = randomCode("0123456789",6);
         try {
@@ -117,14 +117,12 @@ public class UserController {
         String realName = object.getString("realName");
         String mobile = object.getString("mobile");
         String email = object.getString("email");
-
         User user = new User(userName,password,realName,mobile,email);
         return user;
     }
 
     private String randomCode(String s, int size) {
         StringBuilder result = new StringBuilder(size);
-
         Random random = new Random();
         for(int i=0;i<size;i++) {
             int loc = random.nextInt(s.length());

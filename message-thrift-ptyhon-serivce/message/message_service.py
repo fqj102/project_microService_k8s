@@ -1,4 +1,4 @@
-# coding:utf-8
+# coding: utf-8
 from message.api import MessageService
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -9,46 +9,39 @@ import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 
-sander = 'imoocd@163.com'
+sender = 'imoocd@163.com'
 authCode = 'aA111111'
-
-
 class MessageServiceHandler:
 
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def sendMobileMessage(Mobile, message):
-        print('send mobile message')
+    def sendMobileMessage(self, mobile, message):
+        print ("sendMobileMessage, mobile:"+mobile+", message:"+message)
         return True
 
-    @staticmethod
-    def sendEmailMessage(email, message):
-        print('send Email message')
+    def sendEmailMessage(self, email, message):
+        print ("sendEmailMessage, email:"+email+", message:"+message)
         messageObj = MIMEText(message, "plain", "utf-8")
-        messageObj['From'] = sander
+        messageObj['From'] = sender
         messageObj['To'] = email
-        messageObj['Subject'] = Header('测试邮件', 'utf-8')
+        messageObj['Subject'] = Header('慕课网邮件', 'utf-8')
         try:
-            smtpdObj = smtplib.SMTP('smtp.163.com')
-            smtpdObj.login(sander, authCode)
-            smtpdObj.send(sander, [email], messageObj.as_string())
+            smtpObj = smtplib.SMTP('smtp.163.com')
+            smtpObj.login(sender, authCode)
+            smtpObj.sendmail(sender, [email], messageObj.as_string())
+            print ("send mail success")
             return True
-        except smtplib.SMTPException, ex:
-            print('send mail failed')
-            print(ex)
+        except smtplib.SMTPException:
+            print ("send mail failed!")
             return False
-        print('send mail success')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     handler = MessageServiceHandler()
     processor = MessageService.Processor(handler)
-    transport = TSocket.TServerSocket("localhost", "9090")
-    tFactory = TTransport.TFramedTransportFactory()
-    pFactory = TBinaryProtocol.TBinaryProtocolFactory()
-    server = TServer.TSimpleServer(processor, transport, tFactory, pFactory)
-    print("py start")
+    transport = TSocket.TServerSocket(None, "9090")
+    tfactory = TTransport.TFramedTransportFactory()
+    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+
+    server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
+    print ("python thrift server start")
     server.serve()
-    print("py exit")
+    print ("python thrift server exit")
