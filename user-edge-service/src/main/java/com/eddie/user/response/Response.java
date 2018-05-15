@@ -24,6 +24,8 @@ public class Response implements Serializable {
 
     public static final Response SEND_VERIFY_CODE_FILED = new Response("1003","send verify code filed");
 
+    public static final Response VERIFY_CODE_INVALID = new Response("1004","verify code invalid");
+
     public static final Response SUCCESS = new Response();
 
     public static final Response exception(Exception e){

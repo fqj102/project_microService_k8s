@@ -6,14 +6,14 @@ public class PostMessage {
 
     private String time;
 
-    private String sign;
+    private String verifyCode;
 
     private String params;
 
     public PostMessage(String ip, String time, String sign, String params) {
         this.ip = ip;
         this.time = time;
-        this.sign = sign;
+        this.verifyCode = sign;
         this.params = params;
     }
 
@@ -33,12 +33,12 @@ public class PostMessage {
         this.time = time;
     }
 
-    public String getSign() {
-        return sign;
+    public String getVerifyCode() {
+        return verifyCode;
     }
 
-    public void setSign(String sign) {
-        this.sign = sign;
+    public void setVerifyCode(String sign) {
+        this.verifyCode = sign;
     }
 
     public String getParams() {
@@ -54,7 +54,7 @@ public class PostMessage {
         return "LoginInfo{" +
                 "ip='" + ip + '\'' +
                 ", time='" + time + '\'' +
-                ", sign='" + sign + '\'' +
+                ", sign='" + verifyCode + '\'' +
                 ", params='" + params + '\'' +
                 '}';
     }

@@ -57,13 +57,13 @@ public class UserController {
         String message = "Verify Code is:";
         String code = randomCode("0123456789",6);
         try {
-            boolean result = false;
+            boolean result;
             if (StringUtils.isNotBlank(mobile)) {
                 result = serviceProvide.getMessageService().sendMobileMessage(mobile, message+code);
                 redisClient.set(mobile,code);
             } else if (StringUtils.isNotBlank(email)) {
                 result = serviceProvide.getMessageService().sendEmailMessage(email,message+code);
-                redisClient.set(mobile,code);
+                redisClient.set(email,code);
             } else {
                 return Response.MOBILE_OR_PHONE_REQUIRED;
             }
@@ -84,6 +84,17 @@ public class UserController {
         UserInfo userInfo = new UserInfo();
         if (StringUtils.isBlank(user.getEmail())&&StringUtils.isBlank(user.getMobile())){
             return Response.MOBILE_OR_PHONE_REQUIRED;
+        }
+        if (StringUtils.isNotBlank(user.getMobile())){
+            String redisCode = redisClient.get(user.getMobile());
+            if (StringUtils.isEmpty(redisCode) || !redisCode.equals(message.getVerifyCode())){
+                return Response.VERIFY_CODE_INVALID;
+            }
+        }else {
+            String redisCode = redisClient.get(user.getMobile());
+            if (StringUtils.isEmpty(redisCode) || !redisCode.equals(message.getVerifyCode())){
+                return Response.VERIFY_CODE_INVALID;
+            }
         }
         BeanUtils.copyProperties(user,userInfo);
         try {
