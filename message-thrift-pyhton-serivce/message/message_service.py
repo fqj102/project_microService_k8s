@@ -24,6 +24,7 @@ class MessageServiceHandler:
 
     def sendEmailMessage(self, email, message):
         print ("sendEmailMessage, email:" + email + ", message:" + message)
+
         messageObj = MIMEText(message, "plain", "utf-8")
         messageObj['From'] = sender
         messageObj['To'] = email
