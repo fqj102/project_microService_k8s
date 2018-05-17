@@ -1,12 +1,12 @@
 package com.eddie.micro.user.DTO;
 
 public class User {
-    public int id; // required
-    public String userName; // required
-    public String passWord; // required
-    public String realName; // required
-    public String mobile; // required
-    public String email; // required
+    private int id; // required
+    private String userName; // required
+    private String passWord; // required
+    private String realName; // required
+    private String mobile; // required
+    private String email; // required
 
     public User(String userName, String passWord) {
         this.userName = userName;

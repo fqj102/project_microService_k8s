@@ -17,6 +17,8 @@
         <module>micro-service-util</module>
         <module>user-edge-service-client</module>
         <module>micro-eureka-service</module>
+        <module>course-eureka-service-api</module>
+        <module>course-eureka-service</module>
     </modules>
 
 </project>
