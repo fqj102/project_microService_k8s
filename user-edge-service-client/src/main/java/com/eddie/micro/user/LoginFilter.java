@@ -2,6 +2,8 @@ package com.eddie.micro.user;
 
 import com.eddie.micro.user.DTO.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.*;
@@ -11,8 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
-public class LoginFilter implements Filter {
+public abstract class LoginFilter implements Filter {
+
+    private static Cache <String,User> cache =
+            CacheBuilder.newBuilder().maximumSize(10000).expireAfterWrite(3,TimeUnit.MINUTES).build();
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -33,14 +39,25 @@ public class LoginFilter implements Filter {
         }
         User user = null;
         if (StringUtils.isNotEmpty(token)){
-            user = requestUserInfo(token);
+            user = cache.getIfPresent(token);
+            if (user == null) {
+                user = requestUserInfo(token);
+            }
         }
 
         if (user == null){
             response.sendRedirect("http://localhost:8082/api/login");
             return;
         }
+
+        cache.put(token,user);
+
+        login(request, response, user);
+
+        filterChain.doFilter(request, response);
     }
+
+    protected abstract void login(HttpServletRequest request, HttpServletResponse response, User user);
 
     private User requestUserInfo(String token) {
         URL url = null;
