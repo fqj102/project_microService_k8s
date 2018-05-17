@@ -6,6 +6,9 @@ public class Teacher extends User{
 
     private int stars;
 
+    public Teacher() {
+    }
+
     public Teacher(String userName, String passWord) {
         super(userName, passWord);
     }

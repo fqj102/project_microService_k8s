@@ -4,12 +4,17 @@ eureka:
     leaseExpirationDurationInSeconds: 2
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:9010/eureka/
 server:
-  port: 8763
+  port: 9011
 spring:
   application:
     name: service-hi
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/db_course?useSSL=false
+    password: 776543
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
 thrift:
   service:
     ip: 127.0.0.1

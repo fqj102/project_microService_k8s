@@ -8,6 +8,10 @@ public class User {
     private String mobile; // required
     private String email; // required
 
+    public User(){
+
+    }
+
     public User(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
