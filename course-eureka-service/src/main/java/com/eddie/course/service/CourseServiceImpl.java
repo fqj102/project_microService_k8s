@@ -14,6 +14,8 @@ public class CourseServiceImpl implements ICourseService {
     @Autowired
     private CourseMapper courseMapper;
 
+
+
     public List<Course> courseList() {
 
         List<Course> courses = courseMapper.listCourse();

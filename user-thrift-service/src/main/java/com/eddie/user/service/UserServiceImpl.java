@@ -20,6 +20,11 @@ public class UserServiceImpl implements UserService.Iface {
     }
 
     @Override
+    public UserInfo getTeacherById(int id) throws TException {
+        return userMapper.getTeacherById(id);
+    }
+
+    @Override
     public UserInfo getUserByUserName(String userName) throws TException {
         return userMapper.getUserByName(userName);
     }

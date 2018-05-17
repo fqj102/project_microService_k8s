@@ -10,3 +10,7 @@ server:
 spring:
   application:
     name: service-hi
+thrift:
+  service:
+    ip: 127.0.0.1
+    port: 7911
