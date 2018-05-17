@@ -42,15 +42,14 @@ public abstract class LoginFilter implements Filter {
             user = cache.getIfPresent(token);
             if (user == null) {
                 user = requestUserInfo(token);
+                cache.put(token,user);
             }
         }
 
-        if (user == null){
+        if (user == null) {
             response.sendRedirect("http://localhost:8082/api/login");
             return;
         }
-
-        cache.put(token,user);
 
         login(request, response, user);
 
