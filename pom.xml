@@ -20,6 +20,7 @@
         <module>course-eureka-service-api</module>
         <module>course-eureka-service</module>
         <module>course-eureka-ribbon</module>
+        <module>api-getway-zuul</module>
     </modules>
 
 </project>

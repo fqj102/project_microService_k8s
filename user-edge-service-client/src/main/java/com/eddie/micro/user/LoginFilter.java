@@ -29,14 +29,17 @@ public abstract class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String token = request.getParameter("token");
+        System.out.println(token);
         if (StringUtils.isEmpty(token)){
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie:cookies){
                 if (cookie.getName().equals("token")){
                     token = cookie.getValue();
+                    System.out.println(token);
                 }
             }
         }
+        System.out.println(token);
         User user = null;
         if (StringUtils.isNotEmpty(token)){
             user = cache.getIfPresent(token);
@@ -47,7 +50,7 @@ public abstract class LoginFilter implements Filter {
         }
 
         if (user == null) {
-            response.sendRedirect("http://localhost:8082/api/login");
+            response.sendRedirect("http://localhost:8082/login");
             return;
         }
 
@@ -64,7 +67,7 @@ public abstract class LoginFilter implements Filter {
         OutputStream outputStream = null;
         User user = null;
         try {
-            url = new URL("http://localhost:8082/user/authentication");
+            url = new URL("http://localhost:8082/api/authentication");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setUseCaches(false);

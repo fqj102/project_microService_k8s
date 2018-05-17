@@ -81,5 +81,15 @@ public class User {
         this.email = email;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", passWord='" + passWord + '\'' +
+                ", realName='" + realName + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

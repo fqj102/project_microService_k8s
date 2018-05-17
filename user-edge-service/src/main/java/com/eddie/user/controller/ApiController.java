@@ -21,5 +21,4 @@ public class ApiController {
     public User authentication(@RequestHeader("token") String token){
         return redisClient.get(token);
     }
-
 }
