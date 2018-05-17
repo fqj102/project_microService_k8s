@@ -12,7 +12,7 @@ public class CourseController {
     private CourseService courseService;
 
     @GetMapping(value = "/list")
-    public String hi(){
+    public String getList(){
         return courseService.getList();
     }
 

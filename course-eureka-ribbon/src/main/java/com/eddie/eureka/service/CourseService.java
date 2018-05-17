@@ -11,6 +11,6 @@ public class CourseService {
     RestTemplate restTemplate;
 
     public String getList() {
-        return restTemplate.getForObject("http://COURSE-PROVIDE/getList",String.class);
+        return restTemplate.getForObject("http://COURSE-PROVIDER/getList",String.class);
     }
 }

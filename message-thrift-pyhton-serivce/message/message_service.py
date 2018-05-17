@@ -11,20 +11,14 @@ from email.header import Header
 
 sender = 'imoocd@163.com'
 authCode = 'aA111111'
-
-
 class MessageServiceHandler:
 
-    def __init__(self):
-        pass
-
     def sendMobileMessage(self, mobile, message):
-        print ("sendMobileMessage, mobile:" + mobile + ", message:" + message)
+        print ("sendMobileMessage, mobile:"+mobile+", message:"+message)
         return True
 
     def sendEmailMessage(self, email, message):
-        print ("sendEmailMessage, email:" + email + ", message:" + message)
-
+        print ("sendEmailMessage, email:"+email+", message:"+message)
         messageObj = MIMEText(message, "plain", "utf-8")
         messageObj['From'] = sender
         messageObj['To'] = email
