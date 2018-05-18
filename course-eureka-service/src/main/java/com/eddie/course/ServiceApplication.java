@@ -18,15 +18,15 @@ public class ServiceApplication {
         SpringApplication.run(ServiceApplication.class,args);
     }
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBean(){
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        CourseFilter filter = new CourseFilter();
-        filterRegistrationBean.setFilter(filter);
-
-        List<String> urlPatterns = new ArrayList<>();
-        filterRegistrationBean.setUrlPatterns(urlPatterns);
-
-        return filterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean filterRegistrationBean(){
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        CourseFilter filter = new CourseFilter();
+//        filterRegistrationBean.setFilter(filter);
+//
+//        List<String> urlPatterns = new ArrayList<>();
+//        filterRegistrationBean.setUrlPatterns(urlPatterns);
+//
+//        return filterRegistrationBean;
+//    }
 }

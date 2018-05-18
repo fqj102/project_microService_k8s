@@ -18,11 +18,8 @@ public class CourseController {
 
     @RequestMapping("/getList")
     public List<Course> getList(HttpServletRequest request) {
-
         User user = (User) request.getAttribute("user");
-
-        System.out.println(user.toString());
-
+//        System.out.println(user.toString());
         return courseService.courseList();
     }
 

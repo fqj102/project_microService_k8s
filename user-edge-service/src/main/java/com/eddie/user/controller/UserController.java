@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Random;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

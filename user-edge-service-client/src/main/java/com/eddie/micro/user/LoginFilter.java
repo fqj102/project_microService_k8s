@@ -27,15 +27,16 @@ public abstract class LoginFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
         String token = request.getParameter("token");
-        System.out.println(token);
         if (StringUtils.isEmpty(token)){
             Cookie[] cookies = request.getCookies();
+            if(cookies == null){
+                response.sendRedirect("http://localhost:8082/login");
+                return;
+            }
             for (Cookie cookie:cookies){
                 if (cookie.getName().equals("token")){
                     token = cookie.getValue();
-                    System.out.println(token);
                 }
             }
         }
@@ -72,11 +73,12 @@ public abstract class LoginFilter implements Filter {
             connection.setDoOutput(true);
             connection.setUseCaches(false);
             connection.setRequestMethod("POST");
-            inputStream = connection.getInputStream();
+            connection.setRequestProperty("Content-Type", "application/Json; charset=UTF-8");
             outputStream = connection.getOutputStream();
             String tokenBody = "token:" + token;
             outputStream.write(tokenBody.getBytes());
-
+            outputStream.flush();
+            inputStream = connection.getInputStream();
             BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             StringBuilder sb = new StringBuilder();
@@ -102,6 +104,5 @@ public abstract class LoginFilter implements Filter {
     }
 
     public void destroy() {
-
     }
 }
