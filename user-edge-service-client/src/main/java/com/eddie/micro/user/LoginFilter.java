@@ -31,7 +31,7 @@ public abstract class LoginFilter implements Filter {
         if (StringUtils.isEmpty(token)){
             Cookie[] cookies = request.getCookies();
             if(cookies == null){
-                response.sendRedirect("http://localhost:8082/login");
+                response.sendRedirect("http://localhost:8082/user/login");
                 return;
             }
             for (Cookie cookie:cookies){
@@ -51,7 +51,7 @@ public abstract class LoginFilter implements Filter {
         }
 
         if (user == null) {
-            response.sendRedirect("http://localhost:8082/login");
+            response.sendRedirect("http://localhost:8082/user/login");
             return;
         }
 
