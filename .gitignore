@@ -21,3 +21,6 @@
 /message-thrift-python-service/*.iml
 /message-thrift-python-service/target
 /message-thrift-python-service/*.DS_Store
+
+
+target
