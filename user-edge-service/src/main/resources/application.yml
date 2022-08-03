@@ -5,15 +5,15 @@ server:
 thrift:
   user:
     service:
-      ip: 127.0.0.1
+      ip: user-service #127.0.0.1
       port: 7911
   message:
     service:
-      ip: 127.0.0.1
+      ip: message-service #127.0.0.1
       port: 9090
 
 #redis config
 spring:
   redis:
-    host: localhost
+    host: ${redis.address} #localhost
     port: 6379

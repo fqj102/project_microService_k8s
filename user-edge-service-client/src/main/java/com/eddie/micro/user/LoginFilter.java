@@ -68,7 +68,7 @@ public abstract class LoginFilter implements Filter {
         OutputStream outputStream = null;
         User user = null;
         try {
-            url = new URL("http://localhost:8082/api/authentication");
+            url = new URL("http://user-edge-service:8082/api/authentication");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setUseCaches(false);
